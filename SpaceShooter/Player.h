@@ -23,8 +23,10 @@ private:
 	sf::Clock clock_;
 	sf::Time totalElapsed_;
 	Motor motor_;
-
  
+	sf::Sprite spriteShip_;
+
+
 	std::string projectileTexturePath = "Data/PNG/Lasers/laserBlue04.png";
 
 	float x = 0, y = 0;
@@ -34,17 +36,19 @@ private:
 
 public:
 
-	std::vector<Projectile> projectileList_;
+	Player() : spriteShip_(shipTexture_) {}
+
 	void Load();
 	void HandleInput();
 	void Update(float deltaTime);
 	void Move(float deltaTime);
 
-	void Shoot(float deltaTime);
+	void Shoot(float& deltaTime);
 	void SetScore(int score);
 
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
+
 

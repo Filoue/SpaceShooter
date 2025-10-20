@@ -37,6 +37,9 @@ int main()
 	sf::CircleShape circle;
 	circle.setRadius(10);
 
+	Enemy enemy;
+	enemy.Load();
+
 	Player player;
 	player.Load();
 
@@ -68,11 +71,17 @@ int main()
 		player.Move(deltaTime.asSeconds());
 		player.Update(deltaTime.asSeconds());
 
+		enemy.RandomSpawn();
+		enemy.Update();
+		enemy.Move(deltaTime.asSeconds());
+
+
 
 		window.clear(sf::Color::Black);
 
 		//window.draw(circle);
 		window.draw(player);
+		window.draw(enemy);
 
 		window.display();
 
