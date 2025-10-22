@@ -1,36 +1,24 @@
 #include "Projectile.h"
-#include <SFML/System.hpp>
 
-void Projectile::Load()
+Projectile::Projectile(sf::Vector2f position, sf::Vector2f direction, float speed) : projSprite_(projtexture_)
 {
-	projectileTexture_.loadFromFile("Data/PNG/Lasers/laserBlue04.png");
-	projectileSprite_.setTexture(projectileTexture_);
-	projectileSprite_.setTextureRect({ {0,0},{13,37} });
+	projtexture_.loadFromFile("Data/PNG/Lasers/laserBlue05.png");
+	
+	projSprite_.setPosition(position);
 
-	motor_.SetPosition({ 0,0 });
-	motor_.SetDirection({ 0,1 });
-	motor_.SetSpeed(600);
-
+	this->speed_ = direction * speed;
 }
 
-void Projectile::Move(float deltaTime)
+
+
+void Projectile::Update(float dt)
 {
-	motor_.Move(deltaTime);
+	projSprite_.move(speed_ * dt);
 }
 
-std::vector<Projectile> Projectile::AddProjectile(sf::Vector2f projectileStartPosition, sf::Vector2f projectileDirection)
+void Projectile::draw(sf::RenderWindow& window)
 {
-	Projectile newProjectile;
-	newProjectile.setPosition(projectileStartPosition);
-	newProjectile.SetDirection(projectileDirection);
-
-	allProjectile_.emplace_back(newProjectile);
-	return allProjectile_;
+	projSprite_.setTexture(projtexture_);
+	projSprite_.setTextureRect({ {0,0}, {9,37} });
+	window.draw(projSprite_);
 }
-
-void Projectile::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	states.transform *= getTransform();
-	target.draw(projectileSprite_, states);
-}
-

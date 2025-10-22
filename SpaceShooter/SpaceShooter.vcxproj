@@ -124,21 +124,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Animator.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="Ennemy.cpp" />
+    <ClCompile Include="EnnemyManager.cpp" />
     <ClCompile Include="Motor.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="ProjectileManager.cpp" />
     <ClCompile Include="SpaceShooter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Animator.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="Ennemy.h" />
+    <ClInclude Include="EnnemyManager.h" />
     <ClInclude Include="Motor.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="ProjectileManager.h" />
+    <ClInclude Include="RandomFunction.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

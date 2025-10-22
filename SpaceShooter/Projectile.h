@@ -1,33 +1,19 @@
 #pragma once
-
-#include "Enemy.h"
-
-#include <iostream>
-
-#include <SFML/Audio.hpp>
-#include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-
-#include "Motor.h"
-
-class Projectile : public sf::Drawable, public sf::Transformable, public Motor
+class Projectile 
 {
-private:
-	sf::Texture projectileTexture_;
-	sf::Sprite projectileSprite_;
-
-	Motor motor_;
-	std::vector<Projectile> allProjectile_;
-
 public:
-	Projectile() : projectileSprite_(projectileTexture_) {}
+	sf::Texture projtexture_;
+	sf::Sprite projSprite_;
 
-	void Load();
-	void Move(float deltaTime);
-	std::vector<Projectile> AddProjectile(sf::Vector2f projectileStartPosition, sf::Vector2f projectileDirection);
+	sf::Vector2f speed_;
 
-protected:
-	void draw(sf::RenderTarget& target, sf::RenderStates states)const override;
+	bool activated;
+	Projectile(sf::Vector2f position, sf::Vector2f direction, float speed);
+
+
+	void Update(float dt);
+
+	void draw(sf::RenderWindow& window);
 };
 

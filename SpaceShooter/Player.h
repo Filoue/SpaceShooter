@@ -8,9 +8,7 @@
 #include <vector>
 
 #include "Motor.h"
-#include "Enemy.h"
 
-#include "Projectile.h"
 
 constexpr float shootingSpeed = 1.0f / 10.0f;
 
@@ -43,7 +41,7 @@ public:
 	void Update(float deltaTime);
 	void Move(float deltaTime);
 
-	void Shoot(float& deltaTime);
+	void Shoot();
 	void SetScore(int score);
 
 

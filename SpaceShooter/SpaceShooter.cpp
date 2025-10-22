@@ -6,9 +6,10 @@
 #include <SFML/Window.hpp>
 
 #include "Player.h"
-#include "Projectile.h"
 #include "Motor.h"
-#include "Animator.h"
+#include "ProjectileManager.h"
+#include "EnnemyManager.h"
+#include "RandomFunction.h"
 
 int main()
 {
@@ -24,8 +25,10 @@ int main()
 	sf::Texture backgroundTexture("Data/Backgrounds/black.png");
 	sf::Sprite backgroundSprite(backgroundTexture);
 
-	Animator anim;
-	anim.Load("Data/animTest");
+	ProjectileManager projManager;
+	EnnemyManager ennemyManager;
+	
+	InitRandom();
 
 	Motor motor;
 	motor.SetPosition({0,0});
@@ -33,12 +36,6 @@ int main()
 	motor.SetSpeed(250);
 
 	sf::Clock clock;
-
-	sf::CircleShape circle;
-	circle.setRadius(10);
-
-	Enemy enemy;
-	enemy.Load();
 
 	Player player;
 	player.Load();
@@ -64,28 +61,30 @@ int main()
 			}
 		}
 
-		sf::Vector2f pos = motor.Move(deltaTime.asSeconds());
-		circle.setPosition(motor.Move(deltaTime.asSeconds()));
-		//std::cout << pos.x << pos.y << "\n";
-		player.HandleInput();
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space))
+		{
+			sf::Vector2f shootPos = player.getPosition();
+			sf::Vector2f shootDir = { 0.f, -1.f };
+			projManager.CreateProjectile(shootPos, shootDir, 1000.f);
+		}
+
+		//Ennemi Spawn
+		ennemyManager.CreateEnnemy({ RandomSpawn(), 0 }, { 0.f, 1.f }, 100.f);
+
+		std::cout << player.getPosition().x << " " << player.getPosition().y << "\n";
 		player.Move(deltaTime.asSeconds());
 		player.Update(deltaTime.asSeconds());
+		player.HandleInput();
 
-		enemy.RandomSpawn();
-		enemy.Update();
-		enemy.Move(deltaTime.asSeconds());
-
-
+		projManager.Update(deltaTime.asSeconds(), window);
+		ennemyManager.Update(deltaTime.asSeconds(), window);
 
 		window.clear(sf::Color::Black);
+		projManager.draw(window);
+		ennemyManager.draw(window);
 
-		//window.draw(circle);
 		window.draw(player);
-		window.draw(enemy);
-
 		window.display();
-
-
 	}
 	return 0;
 }
