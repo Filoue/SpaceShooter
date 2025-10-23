@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Motor.h"
+#include "ProjectileManager.h"
 
 
 constexpr float shootingSpeed = 1.0f / 10.0f;
@@ -19,7 +20,9 @@ class Player : public sf::Drawable, public sf::Transformable, public Motor
 private:
 	sf::Texture shipTexture_;
 	sf::Clock clock_;
-	sf::Time totalElapsed_;
+	sf::Time totalElapsed_ = sf::seconds(0.2);
+
+	ProjectileManager projManager;
 	Motor motor_;
  
 	sf::Sprite spriteShip_;
@@ -34,16 +37,15 @@ private:
 
 public:
 
-	Player() : spriteShip_(shipTexture_) {}
+	Player() : spriteShip_(shipTexture_) {};
 
 	void Load();
 	void HandleInput();
-	void Update(float deltaTime);
+	void Update(float deltaTime, sf::RenderWindow& window);
 	void Move(float deltaTime);
 
 	void Shoot();
 	void SetScore(int score);
-
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
 
 #include "Player.h"
 #include "Motor.h"
@@ -13,6 +14,15 @@
 
 int main()
 {
+	sf::SoundBuffer buffer;
+	buffer.loadFromFile("Data/spaceShooter.wav");
+	sf::Sound music(buffer);
+
+	music.play();
+	music.setLooping(true);
+	music.setVolume(9);
+
+
 	sf::ContextSettings settings;
 	settings.antiAliasingLevel = 16;
 
@@ -25,7 +35,10 @@ int main()
 	sf::Texture backgroundTexture("Data/Backgrounds/black.png");
 	sf::Sprite backgroundSprite(backgroundTexture);
 
+	ProjectileManager projEnnemyManager;
+
 	ProjectileManager projManager;
+
 	EnnemyManager ennemyManager;
 	
 	InitRandom();
@@ -43,6 +56,7 @@ int main()
 	while (window.isOpen())
 	{
 		sf::Time deltaTime = clock.restart();
+		sf::Time shootingspeed = sf::seconds(0.2f);
 
  		while (const std::optional event = window.pollEvent())
 		{
@@ -65,22 +79,27 @@ int main()
 		{
 			sf::Vector2f shootPos = player.getPosition();
 			sf::Vector2f shootDir = { 0.f, -1.f };
-			projManager.CreateProjectile(shootPos, shootDir, 1000.f);
+			projManager.CreateProjectile(shootPos + sf::Vector2f(44, 0), shootDir, 1000.f, shootingspeed);
 		}
 
 		//Ennemi Spawn
 		ennemyManager.CreateEnnemy({ RandomSpawn(), 0 }, { 0.f, 1.f }, 100.f);
+		// Ennemy shoot
 
-		std::cout << player.getPosition().x << " " << player.getPosition().y << "\n";
+
+		//std::cout << player.getPosition().x << " " << player.getPosition().y << "\n";
 		player.Move(deltaTime.asSeconds());
-		player.Update(deltaTime.asSeconds());
+		player.Update(deltaTime.asSeconds(), window);
 		player.HandleInput();
 
 		projManager.Update(deltaTime.asSeconds(), window);
+	
 		ennemyManager.Update(deltaTime.asSeconds(), window);
 
 		window.clear(sf::Color::Black);
+
 		projManager.draw(window);
+
 		ennemyManager.draw(window);
 
 		window.draw(player);

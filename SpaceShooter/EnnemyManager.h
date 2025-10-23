@@ -4,11 +4,13 @@
 
 #include "Ennemy.h"
 
+
 class EnnemyManager
 {
 private:
 	sf::Clock clock_;
-	sf::Time delay_ = sf::seconds(1.0f);
+	sf::Time delay_ = sf::seconds(5.0f);
+	sf::Time shoot_ = sf::seconds(0.9f);
 
 public:
 	std::vector<Ennemy> ennemies_;

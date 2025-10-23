@@ -1,12 +1,10 @@
 #include "Player.h"
 
-
 void Player::Load()
 {
 	shipTexture_.loadFromFile("Data/PNG/playerShip1_blue.png");
 	spriteShip_.setTexture(shipTexture_);
 	spriteShip_.setTextureRect({ {0,0},{99, 75} });
-	spriteShip_.setOrigin({44.5f, 0.f});
 
 	motor_.SetPosition({400,540});
 	motor_.SetDirection({ 0,1 });
@@ -32,12 +30,12 @@ void Player::HandleInput()
 		direction.x = 1;
 	}
 
-
 	motor_.SetDirection(direction);
 }
 
-void Player::Update(float deltaTime)
+void Player::Update(float deltaTime, sf::RenderWindow& window)
 {
+
 }
 
 void Player::Move(float deltaTime)

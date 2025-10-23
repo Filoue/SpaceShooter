@@ -12,7 +12,7 @@ private:
 	sf::Time delay_ = sf::seconds(0.2f); // Cadence de Tir
 
 public:
-	void CreateProjectile(sf::Vector2f posDepart, sf::Vector2f direction, float speed);
+	void CreateProjectile(sf::Vector2f posDepart, sf::Vector2f direction, float speed, sf::Time shootingSpeed);
 	void Update(float dt, const sf::RenderWindow& window);
 	void draw(sf::RenderWindow& window);
 };

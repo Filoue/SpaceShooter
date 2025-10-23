@@ -3,7 +3,7 @@
 Ennemy::Ennemy(sf::Vector2f position, sf::Vector2f direction, float speed) : ennemySprite_(ennemyTexture_)
 {
 	ennemyTexture_.loadFromFile("Data/PNG/Enemies/enemyBlack2.png");
-
+	
 	ennemySprite_.setPosition(position);
 	this->speed_ = direction * speed;
 }
@@ -11,6 +11,11 @@ Ennemy::Ennemy(sf::Vector2f position, sf::Vector2f direction, float speed) : enn
 void Ennemy::Update(float dt)
 {
 	ennemySprite_.move(speed_ * dt);
+}
+
+sf::Vector2f Ennemy::GetPosition()
+{
+	return ennemySprite_.getPosition();
 }
 
 void Ennemy::draw(sf::RenderWindow& window)
