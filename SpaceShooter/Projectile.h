@@ -1,21 +1,22 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-class Projectile 
+#include "AutoEntity.h"
+
+class Projectile : public AutoEntity
 {
 public:
-	sf::Texture projtexture_;
-	sf::Sprite projSprite_;
-
-	sf::Vector2f speed_;
-
-
-	bool activated;
-	Projectile(sf::Vector2f position, sf::Vector2f direction, float speed);
-
-
-	void Update(float dt);
-
-	void draw(sf::RenderWindow& window);
+	void Move(float) override;
+	void Load() override;
 };
+
+inline void Projectile::Move(float dt)
+{
+	rect_.setPosition(motor_.Move(dt));
+}
+
+inline void Projectile::Load()
+{
+	AutoEntity::Load("Data/PNG/Lasers/laserBlue01.png", { 0, -1 }, 600);
+}
 

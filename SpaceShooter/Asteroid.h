@@ -1,8 +1,8 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 #include "AutoEntity.h"
-
-class Ennemy : public AutoEntity
+class Asteroid : public AutoEntity
 {
 public:
 	void Load() override;
@@ -10,13 +10,14 @@ public:
 
 };
 
-inline void Ennemy::Move(float dt)
+inline void Asteroid::Move(float dt)
 {
 	rect_.setPosition(motor_.Move(dt));
 }
 
-inline void Ennemy::Load()
+inline void Asteroid::Load()
 {
-	AutoEntity::Load("Data/PNG/Enemies/enemyBlack2.png", { 0, 1 }, 300);
+	AutoEntity::Load("Data/PNG/Meteors/meteorBrown_big2.png", {0, 1}, 400);
 }
+
 

@@ -6,14 +6,17 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 
+#include "UI.h"
 #include "Player.h"
 #include "Motor.h"
-#include "ProjectileManager.h"
-#include "EnnemyManager.h"
-#include "RandomFunction.h"
+#include "EntityManager.h"
+#include "StateManager.h"
+
 
 int main()
 {
+
+	// Music Buffer for the music
 	sf::SoundBuffer buffer;
 	buffer.loadFromFile("Data/spaceShooter.wav");
 	sf::Sound music(buffer);
@@ -22,37 +25,22 @@ int main()
 	music.setLooping(true);
 	music.setVolume(9);
 
+	
 
 	sf::ContextSettings settings;
 	settings.antiAliasingLevel = 16;
 
+	// Window Renderer
 	sf::RenderWindow window(sf::VideoMode({ 800, 1080 }), "SpaceShoter", sf::Style::Default, sf::State::Windowed, settings);
 	window.setKeyRepeatEnabled(true);
-	window.setVerticalSyncEnabled(true);
 
 	sf::View view = window.getDefaultView();
 
-	sf::Texture backgroundTexture("Data/Backgrounds/black.png");
-	sf::Sprite backgroundSprite(backgroundTexture);
-
-	ProjectileManager projEnnemyManager;
-
-	ProjectileManager projManager;
-
-	EnnemyManager ennemyManager;
-	
-	InitRandom();
-
-	Motor motor;
-	motor.SetPosition({0,0});
-	motor.SetDirection(sf::Vector2f(1,1));
-	motor.SetSpeed(250);
+	// Loader
+	StateManager::Load(window);
 
 	sf::Clock clock;
-
-	Player player;
-	player.Load();
-
+	
 	while (window.isOpen())
 	{
 		sf::Time deltaTime = clock.restart();
@@ -75,35 +63,12 @@ int main()
 			}
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space))
-		{
-			sf::Vector2f shootPos = player.getPosition();
-			sf::Vector2f shootDir = { 0.f, -1.f };
-			projManager.CreateProjectile(shootPos + sf::Vector2f(44, 0), shootDir, 1000.f, shootingspeed);
-		}
+		// read the function name
+		StateManager::Spawn(window);
+		StateManager::Collision();
+		StateManager::Update(window, deltaTime.asSeconds());
+		StateManager::draw(window);
 
-		//Ennemi Spawn
-		ennemyManager.CreateEnnemy({ RandomSpawn(), 0 }, { 0.f, 1.f }, 100.f);
-		// Ennemy shoot
-
-
-		//std::cout << player.getPosition().x << " " << player.getPosition().y << "\n";
-		player.Move(deltaTime.asSeconds());
-		player.Update(deltaTime.asSeconds(), window);
-		player.HandleInput();
-
-		projManager.Update(deltaTime.asSeconds(), window);
-	
-		ennemyManager.Update(deltaTime.asSeconds(), window);
-
-		window.clear(sf::Color::Black);
-
-		projManager.draw(window);
-
-		ennemyManager.draw(window);
-
-		window.draw(player);
-		window.display();
 	}
 	return 0;
 }

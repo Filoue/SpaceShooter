@@ -34,5 +34,4 @@ sf::Vector2f Motor::Move(float deltaTimeSec)
 		position_ += deltaTimeSec * speed_ * direction_.normalized();
 	}
 	return position_;
-
 }

@@ -124,22 +124,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="AutoEntity.cpp" />
+    <ClCompile Include="BluePill.cpp" />
+    <ClCompile Include="BluePillManager.cpp" />
     <ClCompile Include="Ennemy.cpp" />
     <ClCompile Include="EnnemyManager.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Motor.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileManager.cpp" />
     <ClCompile Include="SpaceShooter.cpp" />
+    <ClCompile Include="StateManager.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asteroid.h" />
+    <ClInclude Include="AutoEntity.h" />
+    <ClInclude Include="BluePill.h" />
+    <ClInclude Include="BluePillManager.h" />
     <ClInclude Include="Ennemy.h" />
     <ClInclude Include="EnnemyManager.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Motor.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileManager.h" />
     <ClInclude Include="RandomFunction.h" />
+    <ClInclude Include="StateManager.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
