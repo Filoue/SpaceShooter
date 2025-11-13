@@ -59,7 +59,7 @@ int main()
 			}
 		}
 
-		//if (StateManager::GetPause())
+		if (StateManager::GetPause())
 		{
 			// read the function name
 			StateManager::Spawn(window);
