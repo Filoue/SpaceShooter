@@ -13,11 +13,17 @@ public:
 
 	void SetPosition(sf::Vector2f);
 	void SetDirection(sf::Vector2f);
+	void SetRotation(sf::Angle);
 
+	void SetLife(int);
+
+	bool IsDead();
 
 	sf::Vector2f GetPosition();
 
 	sf::FloatRect GetBounds();
+
+	int EntityLife;
 
 	bool StillAlive = true;
 	

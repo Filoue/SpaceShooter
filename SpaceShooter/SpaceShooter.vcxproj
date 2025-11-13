@@ -125,9 +125,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="AutoEntity.cpp" />
     <ClCompile Include="BluePill.cpp" />
     <ClCompile Include="BluePillManager.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Ennemy.cpp" />
     <ClCompile Include="EnnemyManager.cpp" />
     <ClCompile Include="EntityManager.cpp" />
@@ -141,9 +143,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asteroid.h" />
+    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="AutoEntity.h" />
     <ClInclude Include="BluePill.h" />
     <ClInclude Include="BluePillManager.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Ennemy.h" />
     <ClInclude Include="EnnemyManager.h" />
     <ClInclude Include="EntityManager.h" />

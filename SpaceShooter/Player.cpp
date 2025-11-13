@@ -41,27 +41,62 @@ void Player::HandleInput()
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space))
 	{
-		if (clock.getElapsedTime() >= sf::seconds(0.2f))
+		if (clock.getElapsedTime() >= sf::seconds(StateManager::GetShootingSpeed()))
 		{
-
-			switch (StateManager::powerLevel)
+			if (StateManager::GetShootingSpeed() <= 0.01)
+			{
+				audio.MaxShootAudio();
+			}
+			else
+			{
+				audio.ShootAudio();
+			}
+			switch (StateManager::bluepowerLevel)
 			{
 			case 1:
-				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x + 50.f, rect_.getPosition().y), { 0,-1 });
-				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x - 50.f, rect_.getPosition().y), { 0,-1 });
-				break;
 			case 2:
-				projManager.CreateEntity(rect_.getPosition(), { 0,-1 });
-				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x + 50.f, rect_.getPosition().y), { 0,-1 });
-				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x - 50.f, rect_.getPosition().y), { 0,-1 });
-				break;
 			case 3:
-				projManager.CreateEntity(rect_.getPosition(), { 0,-1 });
-				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x + 50.f, rect_.getPosition().y), { 0.523599f,-1 });
-				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x - 50.f, rect_.getPosition().y), { -0.523599f,-1 });
+			case 4:
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x + 50.f, rect_.getPosition().y), { 0,-1 }, sf::degrees(0));
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x - 50.f, rect_.getPosition().y), { 0,-1 }, sf::degrees(0));
+				break;
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+				projManager.CreateEntity(rect_.getPosition(), { 0,-1 }, sf::degrees(0));
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x + 50.f, rect_.getPosition().y), { 0,-1 }, sf::degrees(0));
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x - 50.f, rect_.getPosition().y), { 0,-1 }, sf::degrees(0));
+				break;
+			case 10:
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+			case 17:
+			case 18:
+			case 19:
+				projManager.CreateEntity(rect_.getPosition(), { 0,-1 }, sf::degrees(0));
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x + 50.f, rect_.getPosition().y), { 0.523599f,-1 }, sf::degrees(30));
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x - 50.f, rect_.getPosition().y), { -0.523599f,-1 }, sf::degrees(-30));
+				break;
+			case 20:
+				projManager.CreateEntity(rect_.getPosition(), { 0,-1 }, sf::degrees(0));
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x + 50.f, rect_.getPosition().y), { 0.523599f,-1 }, sf::degrees(30));
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x - 50.f, rect_.getPosition().y), { -0.523599f,-1 }, sf::degrees(-30));
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x + 50.f, rect_.getPosition().y), { 0,-1 }, sf::degrees(0));
+				projManager.CreateEntity(sf::Vector2f(rect_.getPosition().x - 50.f, rect_.getPosition().y), { 0,-1 }, sf::degrees(0));
 				break;
 			default:
-				projManager.CreateEntity(rect_.getPosition(), { 0,-1 });
+				if (StateManager::bluepowerLevel >= 20)
+				{
+					StateManager::bluepowerLevel = 20;
+				}
+				projManager.CreateEntity(rect_.getPosition(), { 0,-1 }, sf::degrees(0));
+
 				break;
 			}
 			clock.restart();
@@ -109,12 +144,20 @@ bool Player::CheckProjectileCollisions(std::vector<AutoEntity*>& others, sf::Vec
 
 			if (bullet->GetBounds().findIntersection(other->GetBounds()))
 			{
-				other->StillAlive = false;
-				bullet->StillAlive = false;
+				other->EntityLife--;
+				other->IsDead();
 
+				bullet->StillAlive = false;
 				killPosition = other->GetPosition();
 
-				StateManager::KillEnnemy();
+
+				if (other->IsDead())
+				{
+					StateManager::CreatePills(killPosition);
+					StateManager::KillEnnemy();
+				}
+
+
 				return true;
 			}
 		}
@@ -122,12 +165,36 @@ bool Player::CheckProjectileCollisions(std::vector<AutoEntity*>& others, sf::Vec
 	return false;
 }
 
-void Player::Hit()
+void Player::CheckAsteroidCollisions(std::vector<AutoEntity*>& others, sf::Vector2f& killPosition)
 {
-	StateManager::LostLife();
-	if (StateManager::Life() <= 0)
+	auto bullets = projManager.GetEntites();
+
+	for (auto& bullet : bullets)
 	{
-		std::cout << "git gud \n";
+		if (!bullet->StillAlive)
+		{
+			continue;
+		}
+
+		for (auto& other : others)
+		{
+			if (!other->StillAlive)
+			{
+				continue;
+			}
+
+			if (bullet->GetBounds().findIntersection(other->GetBounds()))
+			{
+				other->EntityLife--;
+				other->IsDead();
+
+				bullet->StillAlive = false;
+
+				killPosition = other->GetPosition();
+
+				StateManager::KillEnnemy();
+			}
+		}
 	}
 }
 

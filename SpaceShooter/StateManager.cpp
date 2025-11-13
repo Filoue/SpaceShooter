@@ -1,17 +1,33 @@
 #include "StateManager.h"
 #include "RandomFunction.h"
 
-int StateManager::powerLevel = 0;
+int StateManager::bluepowerLevel = 0;
+int StateManager::redpowerLevel = 0;
 int StateManager::score = 0;
 int StateManager::remainingLives = 3;
+
+bool StateManager::pause = true;
+
+sf::Vector2f StateManager::killPosition = { 0,0 };
+
+float StateManager::baseCoolDown = 0.5f;
+
+float StateManager::spawnRate = 0.9f;
+float StateManager::shootingSpeed = 1.f;
 
 sf::Clock StateManager::timer;
 sf::Clock StateManager::timer2;
 
 // Manager
-EnnemyManager StateManager::ennemies;
+SpaceEnnemy::GrayEnnemyManager StateManager::ennemies;
+SpaceEnnemy::RedEnnemyManager StateManager::redEnnemies;
 AsteroidManager StateManager::asteroids;
-BluePillManager StateManager::bluePills;
+AudioManager StateManager::audio;
+
+PowerUp::BluePillManager StateManager::bluePills;
+PowerUp::RedPillManager StateManager::redPills;
+
+Boss StateManager::cthulhu;
 
 Player StateManager::player;
 UI StateManager::ui;
@@ -20,17 +36,23 @@ void StateManager::Load(sf::RenderWindow& window)
 {
 	InitRandom();
 
+	cthulhu.Load();
+	audio.PlayAudio();
 	player.Load();
 	ui.Load(window);
+	
 }
 
 void StateManager::Update(sf::RenderWindow& window, float dt)
 {
 	asteroids.Update(window, dt);
 	ennemies.Update(window, dt);
+	redEnnemies.Update(window, dt);
 	bluePills.Update(window, dt);
+	redPills.Update(window, dt);
 	ui.Update();
 
+	//cthulhu.Update(window, dt);
 
 	player.HandleInput();
 	player.Update(dt, window);
@@ -41,44 +63,73 @@ void StateManager::Update(sf::RenderWindow& window, float dt)
 
 void StateManager::Collision()
 {
-	if (player.CheckCollision(ennemies.GetEntites()) || player.CheckCollision(asteroids.GetEntites()))
+	if (player.CheckCollision(ennemies.GetEntites()) || player.CheckCollision(redEnnemies.GetEntites()) || player.CheckCollision(asteroids.GetEntites()))
 	{
-		player.Hit();
+		StateManager::LostLife();
+	}
+
+	if (StateManager::remainingLives == 0)
+	{
+		StateManager::pause = false;
 	}
 
 	if (player.CheckCollision(bluePills.GetEntites()))
 	{
-		bluePills.PowerUP(powerLevel);
-		std::cout << "Power Up " << powerLevel << "\n";
+		bluePills.PowerUP(bluepowerLevel);
+		std::cout << "Power Up " << bluepowerLevel << "\n";
 	}
-
-	sf::Vector2f killPosition = { 0, 0 };
-
-	if (player.CheckProjectileCollisions(ennemies.GetEntites(), killPosition))
+	if (player.CheckCollision(redPills.GetEntites()))
 	{
-		if (RandomPowerUp())
-		{
-			bluePills.CreateEntity(killPosition, { 0,1 });
-		}
+		redPills.PowerUp(redpowerLevel);
+		std::cout << "Power Up " << redpowerLevel << "\n";
 	}
 
 
-	player.CheckProjectileCollisions(asteroids.GetEntites(), killPosition);
+	if (player.CheckProjectileCollisions(ennemies.GetEntites(), killPosition) || player.CheckProjectileCollisions(redEnnemies.GetEntites(), killPosition))
+	{
+		audio.ExplosionAudio();
+	}
+	player.CheckAsteroidCollisions(asteroids.GetEntites(), killPosition);
 }
 
 void StateManager::Spawn(sf::RenderWindow& window)
 {
-	if (timer.getElapsedTime() >= sf::seconds(0.9f))
+	if (StateManager::score >= 10000 && StateManager::score <= 20000)
 	{
-		ennemies.CreateEntity({ RandomSpawn(window) , 0 }, { 0,1 });
+		if (timer.getElapsedTime() >= sf::seconds(StateManager::spawnRate))
+		{
+			redEnnemies.CreateEntity({ RandomSpawn(window) , 0 }, { 0,1 }, sf::degrees(0));
 
-		timer.restart();
+			timer.restart();
+		}
+	}
+	else if (StateManager::score >= 20000)
+	{
+		if (timer.getElapsedTime() >= sf::seconds(0.2))
+		{
+			redEnnemies.CreateEntity({ RandomSpawn(window) , 0 }, { 0,1 }, sf::degrees(0)); 
+			ennemies.CreateEntity({ RandomSpawn(window) , 0 }, { 0,1 }, sf::degrees(0));
+
+
+			timer.restart();
+		}
+	}
+	else 
+	{
+		if (timer.getElapsedTime() >= sf::seconds(0.2f))
+		{
+			ennemies.CreateEntity({ RandomSpawn(window) , 0 }, { 1,0 }, sf::degrees(0));
+		
+
+			timer.restart();
+		}
 	}
 
 
-	if (timer2.getElapsedTime() >= sf::seconds(0.9f))
+
+	if (timer2.getElapsedTime() >= sf::seconds(StateManager::spawnRate))
 	{
-		asteroids.CreateEntity({ RandomSpawn(window) , 0 }, { 0,1 });
+		asteroids.CreateEntity({ RandomSpawn(window) , 0 }, { 0,1 }, sf::degrees(0));
 
 		timer2.restart();
 
@@ -90,13 +141,57 @@ void StateManager::draw(sf::RenderWindow& window)
 	window.clear(sf::Color::Black);
 
 	window.draw(ennemies);
+	window.draw(redEnnemies);
 	window.draw(asteroids);
 	window.draw(player);
 	window.draw(bluePills);
+	window.draw(redPills);
+
+	//window.draw(cthulhu);
 
 	window.draw(ui);
 
 	window.display();
+}
+
+void StateManager::SpawnRateModifier(int& score)
+{
+	switch (score)
+	{
+	case 10000:
+		StateManager::spawnRate = 0.5f;
+		break;
+	default:
+		break;
+	}
+
+}
+
+bool StateManager::GetPause()
+{
+	return StateManager::pause;
+}
+
+float StateManager::GetShootingSpeed()
+{
+	StateManager::shootingSpeed = StateManager::baseCoolDown - (redpowerLevel - 1) * 0.05f;
+	if (StateManager::shootingSpeed < 0.09)
+	{
+		StateManager::shootingSpeed = 0.09;
+	}
+	return StateManager::shootingSpeed;
+}
+
+void StateManager::CreatePills(sf::Vector2f& killPosition)
+{
+	if (RandomPowerUp())
+	{
+		bluePills.CreateEntity(killPosition, { 0,1 }, sf::degrees(0));
+	}
+	if (RandomPowerUp())
+	{
+		redPills.CreateEntity(killPosition, { 0,1 }, sf::degrees(0));
+	}
 }
 
 void StateManager::KillEnnemy()

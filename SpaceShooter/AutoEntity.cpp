@@ -22,6 +22,26 @@ void AutoEntity::SetDirection(sf::Vector2f direction)
 	motor_.SetDirection(direction);
 }
 
+void AutoEntity::SetRotation(sf::Angle rotation)
+{
+	rect_.setRotation(rotation);
+}
+
+void AutoEntity::SetLife(int life)
+{
+	EntityLife = life;
+}
+
+bool AutoEntity::IsDead()
+{
+	if (EntityLife == 0)
+	{
+		StillAlive = false;
+		return true;
+	}
+	return false;
+}
+
 sf::Vector2f AutoEntity::GetPosition()
 {
 	return rect_.getPosition();

@@ -11,6 +11,7 @@
 #include "ProjectileManager.h"
 #include "EntityManager.h"
 #include "UI.h"
+#include "AudioManager.h"
 
 constexpr float shootingSpeed = 1.0f / 10.0f;
 
@@ -21,6 +22,7 @@ private:
 	sf::Texture shipTexture_;
 	sf::RectangleShape rect_;
 	Motor motor_;
+	AudioManager audio;
 
 	sf::Clock clock;
 
@@ -32,13 +34,12 @@ public:
 	void Update(float deltaTime, sf::RenderWindow& window);
 	void SetScore(int score);
 
-	int GetScore();
 	bool CheckCollision(std::vector<AutoEntity*>& others);
 
 	void Hit();
-	void ShowScore();
 
 	bool CheckProjectileCollisions(std::vector<AutoEntity*>&, sf::Vector2f&);
+	void CheckAsteroidCollisions(std::vector<AutoEntity*>&, sf::Vector2f&);
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

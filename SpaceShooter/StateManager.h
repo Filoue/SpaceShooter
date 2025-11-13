@@ -2,26 +2,43 @@
 #include "EntityManager.h"
 #include "BluePillManager.h"
 #include "Player.h"
+#include "AudioManager.h"
+#include "Boss.h"
 
 static class StateManager
 {
 private:
-	static int score;
 	static int remainingLives;
 	static sf::Clock timer;
 	static sf::Clock timer2;
+	static float spawnRate;
+	static float shootingSpeed;
+	static float baseCoolDown;
+	static bool pause;
+
+	static sf::Vector2f killPosition;
+
 
 	// Manager
-	static EnnemyManager ennemies;
+	static SpaceEnnemy::GrayEnnemyManager ennemies;
+	static SpaceEnnemy::RedEnnemyManager redEnnemies;
 	static AsteroidManager asteroids;
-	static BluePillManager bluePills;
+	static PowerUp::BluePillManager bluePills;
+	static PowerUp::RedPillManager redPills;
+	static AudioManager audio;
+
+	// Boss
+	static Boss cthulhu;
 
 	static Player player;
 	static UI ui;
 
 
 public:
-	static int powerLevel;
+	static int bluepowerLevel;
+	static int redpowerLevel;
+	static int score;
+
 
 	static void Load(sf::RenderWindow&);
 	static void Update(sf::RenderWindow&, float);
@@ -31,6 +48,13 @@ public:
 	static void Spawn(sf::RenderWindow&);
 
 	static void draw(sf::RenderWindow&);
+
+	static void SpawnRateModifier(int&);
+
+	static bool GetPause();
+	static float GetShootingSpeed();
+
+	static void CreatePills(sf::Vector2f&   );
 
 	static void KillEnnemy();
 	static void LostLife();

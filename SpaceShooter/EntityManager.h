@@ -10,45 +10,74 @@ class EntityManager : public sf::Drawable
 {
 
 public:
-	virtual void CreateEntity(sf::Vector2f, sf::Vector2f) = 0;
+	virtual void CreateEntity(sf::Vector2f, sf::Vector2f, sf::Angle) = 0;
 	void Update(sf::RenderWindow&, float);
 
 	std::vector<AutoEntity*>& GetEntites();
+	bool IsAlive();
 
 protected:
 	std::vector<AutoEntity*> entity_;
 	void draw(sf::RenderTarget&, sf::RenderStates) const override;
 };
 
-class EnnemyManager : public EntityManager
+
+namespace SpaceEnnemy
 {
-public:
-	void CreateEntity(sf::Vector2f position, sf::Vector2f direction) override
+	class GrayEnnemyManager : public EntityManager
 	{
-		// Ajouter dans le vecteur
-		entity_.emplace_back(new Ennemy());
-		// mettre à la position de spawn
-		entity_.back()->Load();
-		entity_.back()->SetPosition(position);
-	}
-	sf::Vector2f GetPosition()
-	{
-		for (auto& e : entity_)
+	public:
+		void CreateEntity(sf::Vector2f position, sf::Vector2f direction, sf::Angle rotation) override
 		{
-			return e->GetPosition();
+			// Ajouter dans le vecteur
+			entity_.emplace_back(new GrayEnnemy());
+			// mettre à la position de spawn
+			entity_.back()->Load();
+			entity_.back()->SetPosition(position);
+			entity_.back()->SetLife(1);
 		}
-	}
-};
+		sf::Vector2f GetPosition()
+		{
+			for (auto& e : entity_)
+			{
+				return e->GetPosition();
+			}
+		}
+	};
+	class RedEnnemyManager : public EntityManager
+	{
+	public:
+		void CreateEntity(sf::Vector2f position, sf::Vector2f direction, sf::Angle rotation) override
+		{
+			// Ajouter dans le vecteur
+			entity_.emplace_back(new RedEnnemy());
+			// mettre à la position de spawn
+			entity_.back()->Load();
+			entity_.back()->SetPosition(position);
+			entity_.back()->SetLife(3);
+		}
+		sf::Vector2f GetPosition()
+		{
+			for (auto& e : entity_)
+			{
+				return e->GetPosition();
+			}
+		}
+	};
+}
+
+
 
 class AsteroidManager : public EntityManager
 {
 public:
-	void CreateEntity(sf::Vector2f position, sf::Vector2f direction) override
+	void CreateEntity(sf::Vector2f position, sf::Vector2f direction, sf::Angle rotation) override
 	{
 		entity_.emplace_back(new Asteroid());
 
 		entity_.back()->Load();
 		entity_.back()->SetPosition(position);
+		entity_.back()->SetLife(3);
 	}
 };
 

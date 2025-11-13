@@ -7,7 +7,7 @@ namespace Weapons
 	class ProjectileManager : public EntityManager
 	{
 	public:
-		void CreateEntity(sf::Vector2f position, sf::Vector2f direction) override
+		void CreateEntity(sf::Vector2f position, sf::Vector2f direction, sf::Angle rotation) override
 		{
 			// Ajouter dans le vecteur
 			entity_.emplace_back(new Projectile());
@@ -15,6 +15,7 @@ namespace Weapons
 			entity_.back()->Load();
 			entity_.back()->SetPosition(position);
 			entity_.back()->SetDirection(direction);
+			entity_.back()->SetRotation(rotation);
 		}
 	};
 }

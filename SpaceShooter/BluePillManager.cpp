@@ -1,13 +1,33 @@
 #include "BluePillManager.h"
 
-void BluePillManager::CreateEntity(sf::Vector2f position, sf::Vector2f direction)
+namespace PowerUp
 {
-	entity_.emplace_back(new BluePill());
+	// Blue Pill
+	void BluePillManager::CreateEntity(sf::Vector2f position, sf::Vector2f direction, sf::Angle rotation)
+	{
+		entity_.emplace_back(new BluePill());
 
-	entity_.back()->Load();
-	entity_.back()->SetPosition(position);
+		entity_.back()->Load();
+		entity_.back()->SetPosition(position);
+	}
+	void BluePillManager::PowerUP(int& i)
+	{
+		i++;
+	}
+
+	// Red Pill
+	void RedPillManager::CreateEntity(sf::Vector2f position, sf::Vector2f direction, sf::Angle rotation)
+	{
+		entity_.emplace_back(new RedPill());
+
+		entity_.back()->Load();
+		entity_.back()->SetPosition(position);
+	}
+
+	void RedPillManager::PowerUp(int& i)
+	{
+		i++;
+	}
+
 }
-int BluePillManager::PowerUP(int& i)
-{
-	return i++;
-}
+

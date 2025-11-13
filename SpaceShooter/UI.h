@@ -10,8 +10,17 @@ private:
 
 	std::optional<sf::Text> scoreLabel_;
 	std::optional<sf::Text> score_;
+	std::optional<sf::Text> bluePowerUp_;
+	std::optional<sf::Text> redPowerUp_;
 
 	sf::RectangleShape lifeIcon_;
+	sf::RectangleShape bluePills_;
+
+	sf::Texture bluePillText_;
+	sf::Texture redPillText_;
+
+	sf::RectangleShape bluePillRect_;
+	sf::RectangleShape redPillRect_;
 
 	sf::Font font_;
 

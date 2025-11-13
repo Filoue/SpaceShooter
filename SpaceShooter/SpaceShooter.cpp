@@ -12,27 +12,15 @@
 #include "EntityManager.h"
 #include "StateManager.h"
 
-
 int main()
 {
-
-	// Music Buffer for the music
-	sf::SoundBuffer buffer;
-	buffer.loadFromFile("Data/spaceShooter.wav");
-	sf::Sound music(buffer);
-
-	music.play();
-	music.setLooping(true);
-	music.setVolume(9);
-
-	
-
 	sf::ContextSettings settings;
 	settings.antiAliasingLevel = 16;
 
 	// Window Renderer
-	sf::RenderWindow window(sf::VideoMode({ 800, 1080 }), "SpaceShoter", sf::Style::Default, sf::State::Windowed, settings);
+	sf::RenderWindow window(sf::VideoMode({1920, 1080 }), "SpaceShoter", sf::Style::Default, sf::State::Fullscreen, settings);
 	window.setKeyRepeatEnabled(true);
+
 
 	sf::View view = window.getDefaultView();
 
@@ -61,13 +49,26 @@ int main()
 					});
 				window.setView(view);
 			}
+
+			if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+			{
+				if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+				{
+					window.close();
+				}
+			}
 		}
 
-		// read the function name
-		StateManager::Spawn(window);
-		StateManager::Collision();
-		StateManager::Update(window, deltaTime.asSeconds());
-		StateManager::draw(window);
+		//if (StateManager::GetPause())
+		{
+			// read the function name
+			StateManager::Spawn(window);
+			StateManager::Collision();
+			StateManager::Update(window, deltaTime.asSeconds());
+			StateManager::draw(window);
+
+		}
+
 
 	}
 	return 0;
