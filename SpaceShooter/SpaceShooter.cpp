@@ -58,16 +58,18 @@ int main()
 				}
 			}
 		}
-
-		if (StateManager::GetPause())
+		if (!StateManager::GetPause())
 		{
-			// read the function name
-			StateManager::Spawn(window);
-			StateManager::Collision();
-			StateManager::Update(window, deltaTime.asSeconds());
-			StateManager::draw(window);
-
+			StateManager::GameOver(window);
 		}
+		StateManager::draw(window);
+		
+
+		// read the function name
+		StateManager::Spawn(window);
+		StateManager::Collision();
+
+		StateManager::Update(window, deltaTime.asSeconds());
 
 
 	}

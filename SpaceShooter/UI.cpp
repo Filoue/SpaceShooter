@@ -10,6 +10,7 @@ void UI::Load(sf::RenderWindow& window)
 	score_ = sf::Text(font_);
 	bluePowerUp_ = sf::Text(font_);
 	redPowerUp_ = sf::Text(font_);
+	gameOver_ = sf::Text(font_);
 
 	
 	bluePillText_.loadFromFile("Data/PNG/Power-ups/pill_blue.png");
@@ -51,6 +52,14 @@ void UI::Load(sf::RenderWindow& window)
 		score_->setFillColor(sf::Color::White);
 		score_->setPosition({( static_cast<float>(window.getSize().x) + 180) / 2.f, 10.f });
 	}
+
+	if (gameOver_.has_value())
+	{
+		gameOver_->setCharacterSize(30);
+		gameOver_->setFillColor(sf::Color::White);
+		gameOver_->setPosition({ static_cast<float>(window.getSize().x) / 2.f,static_cast<float>(window.getSize().y) / 2.f });
+		gameOver_->setString(" ");
+	}
 }
 
 void UI::Update()
@@ -71,6 +80,13 @@ void UI::Update()
 		redPowerUp_->setPosition({ 50,50 });
 		redPowerUp_->setString(std::to_string(StateManager::redpowerLevel));
 	}
+
+}
+
+void UI::GameOver(sf::RenderWindow& window)
+{
+	gameOver_->setString("Game Over !!!!!! press esc to quit");
+	gameOver_->setOrigin({ gameOver_->getLocalBounds().getCenter() });
 
 }
 
@@ -95,6 +111,7 @@ void UI::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(redPowerUp_.value());
 	}
+		target.draw(gameOver_.value());
 
 	target.draw(redPillRect_);
 	target.draw(bluePillRect_);

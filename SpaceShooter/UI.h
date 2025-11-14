@@ -12,6 +12,7 @@ private:
 	std::optional<sf::Text> score_;
 	std::optional<sf::Text> bluePowerUp_;
 	std::optional<sf::Text> redPowerUp_;
+	std::optional<sf::Text> gameOver_;
 
 	sf::RectangleShape lifeIcon_;
 	sf::RectangleShape bluePills_;
@@ -28,7 +29,7 @@ private:
 
 public:
 	void Load(sf::RenderWindow&);
-
+	void GameOver(sf::RenderWindow&);
 	void Update();
 
 protected:

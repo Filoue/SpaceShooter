@@ -56,6 +56,8 @@ public:
 
 	static void CreatePills(sf::Vector2f&   );
 
+	static void GameOver(sf::RenderWindow&);
+
 	static void KillEnnemy();
 	static void LostLife();
 	static int Score();

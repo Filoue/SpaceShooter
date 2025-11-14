@@ -4,7 +4,7 @@
 int StateManager::bluepowerLevel = 0;
 int StateManager::redpowerLevel = 0;
 int StateManager::score = 0;
-int StateManager::remainingLives = 3;
+int StateManager::remainingLives = 4;
 
 bool StateManager::pause = true;
 
@@ -71,6 +71,13 @@ void StateManager::Collision()
 	if (StateManager::remainingLives == 0)
 	{
 		StateManager::pause = false;
+		int i = 0;
+		audio.StopAudio();
+		if (i == 0)
+		{
+			audio.PlaySad();
+			i++;
+		}
 	}
 
 	if (player.CheckCollision(bluePills.GetEntites()))
@@ -139,13 +146,15 @@ void StateManager::Spawn(sf::RenderWindow& window)
 void StateManager::draw(sf::RenderWindow& window)
 {
 	window.clear(sf::Color::Black);
-
-	window.draw(ennemies);
-	window.draw(redEnnemies);
-	window.draw(asteroids);
-	window.draw(player);
-	window.draw(bluePills);
-	window.draw(redPills);
+	if (GetPause())
+	{
+		window.draw(ennemies);
+		window.draw(redEnnemies);
+		window.draw(asteroids);
+		window.draw(player);
+		window.draw(bluePills);
+		window.draw(redPills);
+	}
 
 	//window.draw(cthulhu);
 
@@ -169,6 +178,7 @@ void StateManager::SpawnRateModifier(int& score)
 
 bool StateManager::GetPause()
 {
+
 	return StateManager::pause;
 }
 
@@ -192,6 +202,11 @@ void StateManager::CreatePills(sf::Vector2f& killPosition)
 	{
 		redPills.CreateEntity(killPosition, { 0,1 }, sf::degrees(0));
 	}
+}
+
+void StateManager::GameOver(sf::RenderWindow& window)
+{
+	ui.GameOver(window);
 }
 
 void StateManager::KillEnnemy()

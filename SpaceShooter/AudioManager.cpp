@@ -3,6 +3,10 @@
 
 AudioManager::AudioManager()
 {
+	if (!sadMusic_.openFromFile("Data/sad.wav"))
+	{
+		std::cout << "Error : couldn't load music.\n";
+	}
 	if (!music_.openFromFile("Data/spaceShooter.wav"))
 	{
 		std::cout << "Error : couldn't load music.\n";
@@ -27,13 +31,28 @@ AudioManager::AudioManager()
 	shootSound_->setVolume(10);
 	explosionSound_->setVolume(35);
 
-	music_.setLooping(true);
+	
 	music_.setVolume(20);
 }
 
 void AudioManager::PlayAudio()
 {
+	music_.setLooping(true);
 	music_.play();
+}
+
+void AudioManager::StopAudio()
+{
+	music_.setLooping(false);
+	music_.setVolume(0);
+	music_.stop();
+}
+
+void AudioManager::PlaySad()
+{
+	sadMusic_.setLooping(true);
+	sadMusic_.setVolume(100);
+	sadMusic_.play();
 }
 
 void AudioManager::ShootAudio()
